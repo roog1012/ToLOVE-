@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ToLOVEる 設定判別メモ</title>
+  <style>
+    /* ==========================================================================
+       CSS Variables & Theme Tokens (Dark Neon Theme: Pink & Cyan)
+       ========================================================================== */
+    :root {
+      --bg-base: #0b0a12;
+      --bg-surface: #151322;
+      --bg-surface-2: #1e1b30;
+      --bg-input: #100e1a;
+      --border-color: #2d2846;
+
+      --text-primary: #f8fafc;
+      --text-secondary: #a5a3bd;
+      --text-muted: #6f6c8a;
+
+      --accent-pink: #ec4899;
+      --accent-pink-glow: rgba(236, 72, 153, 0.28);
+      --accent-magenta: #d946ef;
+      --accent-cyan: #06b6d4;
+      --accent-cyan-bright: #22d3ee;
+      --accent-cyan-glow: rgba(6, 182, 212, 0.25);
+      --accent-danger: #ef4444;
+      --accent-success: #10b981;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 18px;
+      --radius-full: 9999px;
+
+      --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.42);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    /* ==========================================================================
+       Base & Reset
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    body {
+      background-image:
+        radial-gradient(circle at 12% 0%, rgba(236, 72, 153, 0.13), transparent 42%),
+        radial-gradient(circle at 88% 8%, rgba(6, 182, 212, 0.11), transparent 42%);
+      padding-bottom: 92px; /* Fixed bottom action bar space */
+    }
+
+    button, input, textarea {
+      font-family: inherit;
+      color: inherit;
+      touch-action: manipulation;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ==========================================================================
+       Header & Sticky Tab Navigation
+       ========================================================================== */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(11, 10, 18, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .header-top {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 12px 16px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-magenta));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: #fff;
+      box-shadow: 0 0 14px var(--accent-pink-glow);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      background: linear-gradient(90deg, #fff 20%, #f9a8d4 70%, #67e8f9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: block;
+      margin-top: -2px;
+    }
+
+    .header-reset-btn {
+      padding: 7px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      background: rgba(239, 68, 68, 0.12);
+      color: #fca5a5;
+      font-size: 12px;
+      font-weight: 700;
+      transition: transform 0.1s ease, background 0.15s ease;
+    }
+
+    .header-reset-btn:active {
+      transform: scale(0.95);
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .tab-nav {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 12px 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .tab-btn {
+      padding: 10px 6px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.24), rgba(6, 182, 212, 0.18));
+      border-color: var(--accent-pink);
+      color: #fff;
+      box-shadow: 0 0 12px var(--accent-pink-glow);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: var(--radius-full);
+      background: var(--accent-cyan);
+      color: #082f49;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* ==========================================================================
+       Main Container & Panels
+       ========================================================================== */
+    .app-main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 14px 12px 24px;
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.18s ease;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       Cards & Headers
+       ========================================================================== */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+    }
+
+    .card-title::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--accent-pink), var(--accent-cyan));
+    }
+
+    .card-meta {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-cyan-bright);
+      text-align: right;
+    }
+
+    /* ==========================================================================
+       Form Inputs & Quick Buttons
+       ========================================================================== */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 500px) {
+      .field-grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .field-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .input-control {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .input-control:focus {
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 0 3px var(--accent-pink-glow);
+    }
+
+    .input-control::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.85);
+      cursor: pointer;
+    }
+
+    .games-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .games-input-wrap .input-control {
+      padding-right: 36px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .games-unit {
+      position: absolute;
+      right: 14px;
+      color: var(--accent-cyan-bright);
+      font-weight: 800;
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .quick-add-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .quick-btn {
+      padding: 10px 4px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-color);
+      color: var(--accent-cyan-bright);
+      font-size: 13px;
+      font-weight: 800;
+      transition: transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .quick-btn:active {
+      transform: scale(0.95);
+      background: rgba(6, 182, 212, 0.22);
+      border-color: var(--accent-cyan);
+    }
+
+    .quick-btn.minus {
+      color: var(--text-secondary);
+    }
+
+    /* ==========================================================================
+       Counters (Large One-Hand Tap Targets)
+       ========================================================================== */
+    .counter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .counter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--bg-surface-2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+    }
+
+    .counter-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .counter-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .counter-rate {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-cyan-bright);
+      margin-top: 2px;
+    }
+
+    .counter-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-step {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      font-size: 22px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.08s ease;
+    }
+
+    .btn-step:active {
+      transform: scale(0.92);
+    }
+
+    .btn-minus {
+      background: #25213b;
+      border: 1px solid #3c365c;
+      color: var(--text-secondary);
+    }
+
+    .btn-plus {
+      background: linear-gradient(135deg, var(--accent-pink), #be185d);
+      color: #fff;
+      box-shadow: 0 3px 10px var(--accent-pink-glow);
+    }
+
+    .btn-plus.cyan {
+      background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+      box-shadow: 0 3px 10px var(--accent-cyan-glow);
+    }
+
+    .counter-val {
+      min-width: 34px;
+      text-align: center;
+      font-size: 19px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    /* Dual Counter Card (Hit / Try) */
+    .dual-counter-box {
+      background: var(--bg-surface-2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+
+    .dual-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .dual-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .dual-stat {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent-cyan-bright);
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .dual-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .sub-counter {
+      background: rgba(11, 10, 18, 0.58);
+      border-radius: var(--radius-sm);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sub-counter-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .sub-counter-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 4px;
+    }
+
+    .sub-counter .btn-step {
+      width: 44px;
+      height: 44px;
+      font-size: 20px;
+    }
+
+    .sub-counter .counter-val {
+      min-width: 28px;
+      font-size: 18px;
+    }
+
+    .hint-note {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    /* ==========================================================================
+       Quick Tag Chips & Breakdown Pills (Stamps & Kakure Nagi)
+       ========================================================================== */
+    .memo-wrap {
+      margin-top: 12px;
+    }
+
+    .recorded-box {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(11, 10, 18, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-sm);
+    }
+
+    .recorded-empty {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .recorded-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .recorded-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: var(--radius-full);
+      background: rgba(236, 72, 153, 0.16);
+      border: 1px solid rgba(236, 72, 153, 0.45);
+      color: #fbcfe8;
+      font-size: 12.5px;
+      font-weight: 700;
+      transition: transform 0.1s ease, background 0.15s ease;
+    }
+
+    .recorded-pill.cyan {
+      background: rgba(6, 182, 212, 0.16);
+      border-color: rgba(6, 182, 212, 0.45);
+      color: #a5f3fc;
+    }
+
+    .recorded-pill:active {
+      transform: scale(0.94);
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .pill-del {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.35);
+      color: #fda4af;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag-chip {
+      padding: 9px 14px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform 0.1s ease, background 0.15s ease;
+    }
+
+    .tag-chip:active {
+      transform: scale(0.94);
+    }
+
+    .tag-chip.c-cyan { border-color: rgba(34, 211, 238, 0.5); color: #67e8f9; }
+    .tag-chip.c-green { border-color: rgba(52, 211, 153, 0.5); color: #6ee7b7; }
+    .tag-chip.c-amber { border-color: rgba(251, 191, 36, 0.55); color: #fde047; }
+    .tag-chip.c-pink { border-color: rgba(244, 114, 182, 0.6); color: #f9a8d4; }
+    .tag-chip.c-rainbow {
+      border-color: rgba(236, 72, 153, 0.7);
+      background: linear-gradient(90deg, rgba(236, 72, 153, 0.22), rgba(6, 182, 212, 0.22));
+      color: #fff;
+    }
+
+    /* Setting selector grid */
+    .setting-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .setting-chip {
+      padding: 11px 4px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .setting-chip.selected {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(217, 70, 239, 0.24));
+      border-color: var(--accent-pink);
+      color: #fff;
+      box-shadow: 0 0 12px var(--accent-pink-glow);
+    }
+
+    /* ==========================================================================
+       Summary Output Tab
+       ========================================================================== */
+    .output-textarea {
+      width: 100%;
+      min-height: 440px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: #e2e8f0;
+      resize: vertical;
+      outline: none;
+    }
+
+    .output-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    @media (min-width: 480px) {
+      .output-actions {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-magenta));
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px var(--accent-pink-glow);
+      transition: transform 0.1s ease;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(6, 182, 212, 0.16);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan-bright);
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.1s ease, background 0.15s ease;
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.97);
+      background: rgba(6, 182, 212, 0.28);
+    }
+
+    /* ==========================================================================
+       History Tab
+       ========================================================================== */
+    .history-empty {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+    }
+
+    .history-empty-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+      opacity: 0.65;
+    }
+
+    .history-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .history-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .history-date {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .history-games {
+      font-size: 13px;
+      color: var(--accent-cyan-bright);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .history-setting-badge {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: rgba(236, 72, 153, 0.18);
+      border: 1px solid rgba(236, 72, 153, 0.45);
+      color: #f9a8d4;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .history-summary-line {
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--bg-surface-2);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+    }
+
+    .history-preview-box {
+      display: none;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      margin-bottom: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      white-space: pre-wrap;
+      color: #cbd5e1;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .history-preview-box.open {
+      display: block;
+    }
+
+    .history-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .btn-sm {
+      padding: 9px 4px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      text-align: center;
+      transition: transform 0.1s ease;
+    }
+
+    .btn-sm:active {
+      transform: scale(0.95);
+    }
+
+    .btn-sm.copy {
+      border-color: rgba(236, 72, 153, 0.5);
+      color: #f9a8d4;
+      background: rgba(236, 72, 153, 0.12);
+    }
+
+    .btn-sm.load {
+      border-color: rgba(6, 182, 212, 0.5);
+      color: var(--accent-cyan-bright);
+      background: rgba(6, 182, 212, 0.12);
+    }
+
+    .btn-sm.delete {
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* ==========================================================================
+       Fixed Bottom Action Bar
+       ========================================================================== */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background: rgba(15, 13, 24, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border-color);
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    }
+
+    .bottom-bar-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 10px;
+    }
+
+    .bottom-bar .btn-primary,
+    .bottom-bar .btn-secondary {
+      padding: 12px 10px;
+      font-size: 14px;
+    }
+
+    /* ==========================================================================
+       Toast & Custom Modal (No native alert/confirm)
+       ========================================================================== */
+    .toast {
+      position: fixed;
+      top: 74px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-16px);
+      background: rgba(16, 185, 129, 0.95);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.error {
+      background: rgba(239, 68, 68, 0.95);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(4px);
+      z-index: 90;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 360px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.16s ease;
+    }
+
+    .modal-title {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .modal-message {
+      margin: 0 0 18px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .modal-btn {
+      padding: 11px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .modal-cancel {
+      background: var(--bg-surface-2);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .modal-confirm {
+      background: var(--accent-pink);
+      color: #fff;
+    }
+
+    .modal-confirm.danger {
+      background: var(--accent-danger);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header & Tab Navigation -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-icon">T</div>
+        <div>
+          <h1 class="brand-title">ToLOVEる 設定判別メモ</h1>
+          <span class="brand-sub">L ToLOVEるダークネス 実戦カウンター</span>
+        </div>
+      </div>
+      <button type="button" class="header-reset-btn" id="btnResetTop">リセット</button>
+    </div>
+
+    <nav class="tab-nav" role="tablist">
+      <button type="button" class="tab-btn active" data-tab="input" role="tab" aria-selected="true">
+        入力
+      </button>
+      <button type="button" class="tab-btn" data-tab="output" role="tab" aria-selected="false">
+        まとめ出力
+      </button>
+      <button type="button" class="tab-btn" data-tab="history" role="tab" aria-selected="false">
+        履歴 <span class="badge tabular-nums" id="historyCountBadge">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="app-main">
+
+    <!-- ======================================================================
+         TAB 1: 入力
+         ====================================================================== -->
+    <section id="panel-input" class="tab-panel active">
+
+      <!-- 1. 基本情報 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">基本情報</h2>
+          <span class="card-meta">自動下書き保存ON</span>
+        </div>
+        <div class="field-grid field-grid-2">
+          <div>
+            <label class="field-label" for="inputDate">日付</label>
+            <input type="date" id="inputDate" class="input-control">
+          </div>
+          <div>
+            <label class="field-label" for="inputGames">ゲーム数</label>
+            <div class="games-input-wrap">
+              <input type="number" id="inputGames" class="input-control tabular-nums" min="0" step="1" inputmode="numeric" placeholder="0">
+              <span class="games-unit">G</span>
+            </div>
+            <div class="quick-add-row">
+              <button type="button" class="quick-btn minus" data-add-games="-100">-100</button>
+              <button type="button" class="quick-btn" data-add-games="100">+100</button>
+              <button type="button" class="quick-btn" data-add-games="500">+500</button>
+              <button type="button" class="quick-btn" data-add-games="1000">+1000</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 〔ゾーン当選〕 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">〔ゾーン当選〕</h2>
+          <span class="card-meta">当選+で到達も自動加算</span>
+        </div>
+        <div class="counter-list" id="zoneList">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- 3. 〔メモリアルボーナス〕 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">〔メモリアルボーナス〕</h2>
+          <span class="card-meta tabular-nums" id="mbTotalMeta">合計 0回</span>
+        </div>
+        <div class="counter-list">
+          <div class="counter-row">
+            <div class="counter-info">
+              <span class="counter-label">100枚</span>
+              <span class="counter-rate tabular-nums" id="rate-mb100">0.0%</span>
+            </div>
+            <div class="counter-controls">
+              <button type="button" class="btn-step btn-minus" data-counter="mb100" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-mb100">0</span>
+              <button type="button" class="btn-step btn-plus" data-counter="mb100" data-delta="1">＋</button>
+            </div>
+          </div>
+          <div class="counter-row">
+            <div class="counter-info">
+              <span class="counter-label">250枚</span>
+              <span class="counter-rate tabular-nums" id="rate-mb250">0.0%</span>
+            </div>
+            <div class="counter-controls">
+              <button type="button" class="btn-step btn-minus" data-counter="mb250" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-mb250">0</span>
+              <button type="button" class="btn-step btn-plus" data-counter="mb250" data-delta="1">＋</button>
+            </div>
+          </div>
+          <div class="counter-row">
+            <div class="counter-info">
+              <span class="counter-label">300枚</span>
+              <span class="counter-rate tabular-nums" id="rate-mb300">0.0%</span>
+            </div>
+            <div class="counter-controls">
+              <button type="button" class="btn-step btn-minus" data-counter="mb300" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-mb300">0</span>
+              <button type="button" class="btn-step btn-plus" data-counter="mb300" data-delta="1">＋</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 〔ST1戦目ベル〕 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">〔ST1戦目ベル〕</h2>
+          <span class="card-meta tabular-nums" id="stat-stBell">0/0 (-%)</span>
+        </div>
+        <div class="dual-grid">
+          <div class="sub-counter">
+            <span class="sub-counter-label">成功数</span>
+            <div class="sub-counter-controls">
+              <button type="button" class="btn-step btn-minus" data-dual="stBell" data-part="hit" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-stBell-hit">0</span>
+              <button type="button" class="btn-step btn-plus" data-dual="stBell" data-part="hit" data-delta="1">＋</button>
+            </div>
+          </div>
+          <div class="sub-counter">
+            <span class="sub-counter-label">試行回数</span>
+            <div class="sub-counter-controls">
+              <button type="button" class="btn-step btn-minus" data-dual="stBell" data-part="try" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-stBell-try">0</span>
+              <button type="button" class="btn-step btn-plus cyan" data-dual="stBell" data-part="try" data-delta="1">＋</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. 〔3連上位〕 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">〔3連上位〕</h2>
+          <span class="card-meta tabular-nums" id="stat-threeRen">0/0 (-%)</span>
+        </div>
+        <div class="dual-grid">
+          <div class="sub-counter">
+            <span class="sub-counter-label">成功数</span>
+            <div class="sub-counter-controls">
+              <button type="button" class="btn-step btn-minus" data-dual="threeRen" data-part="hit" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-threeRen-hit">0</span>
+              <button type="button" class="btn-step btn-plus" data-dual="threeRen" data-part="hit" data-delta="1">＋</button>
+            </div>
+          </div>
+          <div class="sub-counter">
+            <span class="sub-counter-label">試行回数</span>
+            <div class="sub-counter-controls">
+              <button type="button" class="btn-step btn-minus" data-dual="threeRen" data-part="try" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-threeRen-try">0</span>
+              <button type="button" class="btn-step btn-plus cyan" data-dual="threeRen" data-part="try" data-delta="1">＋</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. 〔ウィスパー〕※上位後BONUS分母 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">〔ウィスパー〕</h2>
+          <span class="card-meta tabular-nums" id="stat-whisper">0/0 (-%)</span>
+        </div>
+        <div class="dual-grid">
+          <div class="sub-counter">
+            <span class="sub-counter-label">ウィスパー発生</span>
+            <div class="sub-counter-controls">
+              <button type="button" class="btn-step btn-minus" data-dual="whisper" data-part="hit" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-whisper-hit">0</span>
+              <button type="button" class="btn-step btn-plus" data-dual="whisper" data-part="hit" data-delta="1">＋</button>
+            </div>
+          </div>
+          <div class="sub-counter">
+            <span class="sub-counter-label">上位後BONUS回数</span>
+            <div class="sub-counter-controls">
+              <button type="button" class="btn-step btn-minus" data-dual="whisper" data-part="try" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-whisper-try">0</span>
+              <button type="button" class="btn-step btn-plus cyan" data-dual="whisper" data-part="try" data-delta="1">＋</button>
+            </div>
+          </div>
+        </div>
+        <div class="hint-note">※分母は上位ST突入後のBONUS回数です（発生+1で上位後BONUS回数も自動加算）</div>
+      </div>
+
+      <!-- 7. 〔ST終了画面〕 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">〔ST終了画面〕</h2>
+          <span class="card-meta tabular-nums" id="stEndTotalMeta">合計 0回</span>
+        </div>
+        <div class="counter-list">
+          <div class="counter-row">
+            <div class="counter-info">
+              <span class="counter-label">デフォ</span>
+              <span class="counter-rate tabular-nums" id="rate-endDefault">0.0%</span>
+            </div>
+            <div class="counter-controls">
+              <button type="button" class="btn-step btn-minus" data-counter="endDefault" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-endDefault">0</span>
+              <button type="button" class="btn-step btn-plus" data-counter="endDefault" data-delta="1">＋</button>
+            </div>
+          </div>
+          <div class="counter-row">
+            <div class="counter-info">
+              <span class="counter-label">美柑</span>
+              <span class="counter-rate tabular-nums" id="rate-endMikan">0.0%</span>
+            </div>
+            <div class="counter-controls">
+              <button type="button" class="btn-step btn-minus" data-counter="endMikan" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-endMikan">0</span>
+              <button type="button" class="btn-step btn-plus" data-counter="endMikan" data-delta="1">＋</button>
+            </div>
+          </div>
+          <div class="counter-row">
+            <div class="counter-info">
+              <span class="counter-label">スタンプ</span>
+              <span class="counter-rate tabular-nums" id="rate-endStamp">0.0%</span>
+            </div>
+            <div class="counter-controls">
+              <button type="button" class="btn-step btn-minus" data-counter="endStamp" data-delta="-1">−</button>
+              <span class="counter-val tabular-nums" id="val-endStamp">0</span>
+              <button type="button" class="btn-step btn-plus" data-counter="endStamp" data-delta="1">＋</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- スタンプ内訳（吉・良・優・極） -->
+        <div class="recorded-box">
+          <div class="field-label" style="margin-bottom:6px;">スタンプ内訳（タップで1回減算）</div>
+          <div class="recorded-list" id="stampRecordedList">
+            <span class="recorded-empty">下のタグからスタンプを追加できます</span>
+          </div>
+        </div>
+
+        <div class="chip-group" id="stampTagGroup">
+          <!-- Rendered by JS: 吉, 良, 優, 極 -->
+        </div>
+
+        <div class="memo-wrap">
+          <label class="field-label" for="memoStamp">スタンプ自由メモ</label>
+          <input type="text" id="memoStamp" class="input-control" placeholder="例：朝イチ優出現、極確認 等">
+        </div>
+      </div>
+
+      <!-- 8. 〔隠れ凪〕 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">〔隠れ凪〕</h2>
+          <span class="card-meta">タグタップで内訳＆合計加算</span>
+        </div>
+        <div class="counter-row">
+          <div class="counter-info">
+            <span class="counter-label">合計出現回数</span>
+            <span class="counter-rate">確認できた合計回数</span>
+          </div>
+          <div class="counter-controls">
+            <button type="button" class="btn-step btn-minus" data-counter="kakureNagi" data-delta="-1">−</button>
+            <span class="counter-val tabular-nums" id="val-kakureNagi">0</span>
+            <button type="button" class="btn-step btn-plus" data-counter="kakureNagi" data-delta="1">＋</button>
+          </div>
+        </div>
+
+        <!-- 隠れ凪内訳（設定2〜6示唆） -->
+        <div class="recorded-box">
+          <div class="field-label" style="margin-bottom:6px;">出現内訳（タップで1回減算）</div>
+          <div class="recorded-list" id="nagiRecordedList">
+            <span class="recorded-empty">下のタグから出現した隠れ凪を追加できます</span>
+          </div>
+        </div>
+
+        <div class="chip-group" id="nagiTagGroup">
+          <!-- Rendered by JS: 設定2示唆〜設定6示唆 -->
+        </div>
+
+        <div class="memo-wrap">
+          <label class="field-label" for="memoNagi">隠れ凪自由メモ</label>
+          <input type="text" id="memoNagi" class="input-control" placeholder="例：ST終了時に出現 等">
+        </div>
+      </div>
+
+      <!-- 9. 推定設定 -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">推定設定</h2>
+          <span class="card-meta" id="selectedSettingBadge">不明</span>
+        </div>
+        <div class="setting-grid" id="settingGrid">
+          <!-- Rendered by JS -->
+        </div>
+        <div class="memo-wrap">
+          <label class="field-label" for="memoSetting">補足メモ（収支・台番・その他挙動）</label>
+          <input type="text" id="memoSetting" class="input-control" placeholder="例：+1500枚、250ゾーン強め 等">
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================
+         TAB 2: まとめ出力
+         ====================================================================== -->
+    <section id="panel-output" class="tab-panel">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">まとめテキストプレビュー</h2>
+          <span class="card-meta">リアルタイム反映</span>
+        </div>
+        <textarea id="outputPreview" class="output-textarea" readonly></textarea>
+        <div class="output-actions">
+          <button type="button" class="btn-primary" id="btnCopyOutput">
+            <span>📋 ワンタップコピー</span>
+          </button>
+          <button type="button" class="btn-secondary" id="btnSaveOutput">
+            <span>💾 実戦を保存</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         TAB 3: 履歴
+         ====================================================================== -->
+    <section id="panel-history" class="tab-panel">
+      <div id="historyList">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Fixed Bottom Action Bar -->
+  <div class="bottom-bar" id="bottomBar">
+    <div class="bottom-bar-inner">
+      <button type="button" class="btn-secondary" id="btnSaveBottom">💾 実戦を保存</button>
+      <button type="button" class="btn-primary" id="btnCopyBottom">📋 ワンタップコピー</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Custom Confirm Modal -->
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <h3 id="modalTitle" class="modal-title">確認</h3>
+      <p id="modalMessage" class="modal-message"></p>
+      <div class="modal-actions">
+        <button type="button" class="modal-btn modal-cancel" id="modalCancel">キャンセル</button>
+        <button type="button" class="modal-btn modal-confirm" id="modalConfirm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ======================================================================
+         Constants & Storage Keys
+         ====================================================================== */
+      const STORAGE_DRAFT_KEY = 'toloveru_tracker_draft_v1';
+      const STORAGE_HISTORY_KEY = 'toloveru_tracker_history_v1';
+
+      const ZONES = [
+        { key: 'z150', label: '150ゾーン' },
+        { key: 'z250', label: '250ゾーン' },
+        { key: 'z450', label: '450ゾーン' },
+        { key: 'z650', label: '650ゾーン' }
+      ];
+
+      // スタンプは吉・良・優・極の4種類のみ
+      const STAMP_TAGS = [
+        { label: '吉', cls: 'c-cyan' },
+        { label: '良', cls: 'c-green' },
+        { label: '優', cls: 'c-amber' },
+        { label: '極', cls: 'c-rainbow' }
+      ];
+
+      // 隠れ凪は設定2〜6示唆の5種類のみ
+      const NAGI_TAGS = [
+        { label: '設定2示唆', cls: 'c-cyan' },
+        { label: '設定3示唆', cls: 'c-green' },
+        { label: '設定4示唆', cls: 'c-amber' },
+        { label: '設定5示唆', cls: 'c-pink' },
+        { label: '設定6示唆', cls: 'c-rainbow' }
+      ];
+
+      const SETTING_OPTIONS = [
+        '設定1', '設定2', '設定3', '設定4',
+        '設定5', '設定6', '不明'
+      ];
+
+      /* ======================================================================
+         Helper Functions
+         ====================================================================== */
+      function getTodayString() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }
+
+      function createDefaultState() {
+        return {
+          date: getTodayString(),
+          games: 0,
+          zones: {
+            z150: { hit: 0, try: 0 },
+            z250: { hit: 0, try: 0 },
+            z450: { hit: 0, try: 0 },
+            z650: { hit: 0, try: 0 }
+          },
+          mb100: 0,
+          mb250: 0,
+          mb300: 0,
+          stBell: { hit: 0, try: 0 },
+          threeRen: { hit: 0, try: 0 },
+          whisper: { hit: 0, try: 0 },
+          endDefault: 0,
+          endMikan: 0,
+          endStamp: 0,
+          stampDetails: {},
+          memoStamp: '',
+          kakureNagi: 0,
+          nagiDetails: {},
+          memoNagi: '',
+          setting: '不明',
+          memoSetting: ''
+        };
+      }
+
+      function formatPercent(num, den) {
+        if (!den || den <= 0) return '-';
+        return ((num / den) * 100).toFixed(1);
+      }
+
+      function formatHitTry(hit, tries) {
+        if (tries <= 0) return '0/0 (-%)';
+        return `${hit}/${tries} (${formatPercent(hit, tries)}%)`;
+      }
+
+      function formatBreakdownMap(details, orderList) {
+        if (!details || typeof details !== 'object') return '';
+        const orderedKeys = [];
+        // Keep canonical tag order first, then any legacy keys if present
+        orderList.forEach(item => {
+          if (Number(details[item.label]) > 0) orderedKeys.push(item.label);
+        });
+        Object.keys(details).forEach(k => {
+          if (!orderedKeys.includes(k) && Number(details[k]) > 0) {
+            orderedKeys.push(k);
+          }
+        });
+        return orderedKeys.map(k => `${k}×${details[k]}`).join('、');
+      }
+
+      function sanitizeMap(obj) {
+        const result = {};
+        if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+          Object.entries(obj).forEach(([k, v]) => {
+            const num = parseInt(v, 10);
+            if (!isNaN(num) && num > 0) {
+              result[k] = num;
+            }
+          });
+        }
+        return result;
+      }
+
+      function sanitizeDual(val) {
+        if (val && typeof val === 'object') {
+          const hit = Math.max(0, parseInt(val.hit, 10) || 0);
+          const tries = Math.max(hit, parseInt(val.try, 10) || 0);
+          return { hit, try: tries };
+        }
+        // Backward compatibility: if whisper was previously saved as a single number
+        if (typeof val === 'number' && !isNaN(val) && val > 0) {
+          const n = Math.floor(val);
+          return { hit: n, try: n };
+        }
+        return { hit: 0, try: 0 };
+      }
+
+      function safeParse(json, fallback) {
+        try {
+          const parsed = JSON.parse(json);
+          return parsed !== null && typeof parsed === 'object' ? parsed : fallback;
+        } catch (e) {
+          return fallback;
+        }
+      }
+
+      // Safely merge legacy or partial saved data without errors
+      function deepMergeState(saved) {
+        const base = createDefaultState();
+        if (!saved || typeof saved !== 'object') return base;
+
+        return {
+          ...base,
+          date: typeof saved.date === 'string' ? saved.date : base.date,
+          games: Math.max(0, parseInt(saved.games, 10) || 0),
+          zones: {
+            z150: sanitizeDual(saved.zones && saved.zones.z150),
+            z250: sanitizeDual(saved.zones && saved.zones.z250),
+            z450: sanitizeDual(saved.zones && saved.zones.z450),
+            z650: sanitizeDual(saved.zones && saved.zones.z650)
+          },
+          mb100: Math.max(0, parseInt(saved.mb100, 10) || 0),
+          mb250: Math.max(0, parseInt(saved.mb250, 10) || 0),
+          mb300: Math.max(0, parseInt(saved.mb300, 10) || 0),
+          stBell: sanitizeDual(saved.stBell),
+          threeRen: sanitizeDual(saved.threeRen),
+          whisper: sanitizeDual(saved.whisper),
+          endDefault: Math.max(0, parseInt(saved.endDefault, 10) || 0),
+          endMikan: Math.max(0, parseInt(saved.endMikan, 10) || 0),
+          endStamp: Math.max(0, parseInt(saved.endStamp, 10) || 0),
+          stampDetails: sanitizeMap(saved.stampDetails),
+          memoStamp: typeof saved.memoStamp === 'string' ? saved.memoStamp : '',
+          kakureNagi: Math.max(0, parseInt(saved.kakureNagi, 10) || 0),
+          nagiDetails: sanitizeMap(saved.nagiDetails),
+          memoNagi: typeof saved.memoNagi === 'string' ? saved.memoNagi : '',
+          setting: SETTING_OPTIONS.includes(saved.setting) ? saved.setting : '不明',
+          memoSetting: typeof saved.memoSetting === 'string' ? saved.memoSetting : ''
+        };
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      /* ======================================================================
+         State Initialization & Storage
+         ====================================================================== */
+      let state = loadDraft();
+      let historyList = loadHistory();
+      let toastTimer = null;
+      let modalCallback = null;
+
+      function loadDraft() {
+        try {
+          const raw = localStorage.getItem(STORAGE_DRAFT_KEY);
+          if (!raw) return createDefaultState();
+          return deepMergeState(safeParse(raw, null));
+        } catch (e) {
+          return createDefaultState();
+        }
+      }
+
+      function saveDraft() {
+        try {
+          localStorage.setItem(STORAGE_DRAFT_KEY, JSON.stringify(state));
+        } catch (e) {
+          // Ignore storage quota errors silently
+        }
+      }
+
+      function loadHistory() {
+        try {
+          const raw = localStorage.getItem(STORAGE_HISTORY_KEY);
+          const list = safeParse(raw, []);
+          return Array.isArray(list) ? list : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function persistHistory() {
+        try {
+          localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(historyList));
+        } catch (e) {
+          showToast('保存容量の上限に達しました', true);
+        }
+      }
+
+      /* ======================================================================
+         Summary Text Formatter
+         ====================================================================== */
+      function generateSummaryText(data) {
+        const mbTotal = data.mb100 + data.mb250 + data.mb300;
+        const endTotal = data.endDefault + data.endMikan + data.endStamp;
+
+        const fmtCountRate = (count, total) => {
+          if (total <= 0) return `${count}回 (0.0%)`;
+          return `${count}回 (${formatPercent(count, total)}%)`;
+        };
+
+        // スタンプ内訳＋メモ整形
+        const stampBreakdown = formatBreakdownMap(data.stampDetails, STAMP_TAGS);
+        const stampMemo = (data.memoStamp || '').trim();
+        const stampExtras = [stampBreakdown, stampMemo].filter(Boolean).join(' / ');
+        const stampLine = `スタンプ：${fmtCountRate(data.endStamp, endTotal)}` +
+          (stampExtras ? `（${stampExtras}）` : '');
+
+        // 隠れ凪内訳＋メモ整形
+        const nagiBreakdown = formatBreakdownMap(data.nagiDetails, NAGI_TAGS);
+        const nagiMemo = (data.memoNagi || '').trim();
+        const nagiExtras = [nagiBreakdown, nagiMemo].filter(Boolean).join(' / ');
+        const nagiLine = `合計${data.kakureNagi}回` + (nagiExtras ? `（${nagiExtras}）` : '');
+
+        // 推定設定＋メモ整形
+        const settingMemo = (data.memoSetting || '').trim();
+        const settingLine = `推定設定：${data.setting}` + (settingMemo ? `（${settingMemo}）` : '');
+
+        return [
+          '【ToLOVEる設定判別】',
+          `日付：${data.date || '未入力'}`,
+          `ゲーム数：${Number(data.games) || 0} G`,
+          '',
+          '〔ゾーン当選〕',
+          `150ゾーン：${formatHitTry(data.zones.z150.hit, data.zones.z150.try)}`,
+          `250ゾーン：${formatHitTry(data.zones.z250.hit, data.zones.z250.try)}`,
+          `450ゾーン：${formatHitTry(data.zones.z450.hit, data.zones.z450.try)}`,
+          `650ゾーン：${formatHitTry(data.zones.z650.hit, data.zones.z650.try)}`,
+          '',
+          '〔メモリアルボーナス〕',
+          `100枚：${fmtCountRate(data.mb100, mbTotal)}`,
+          `250枚：${fmtCountRate(data.mb250, mbTotal)}`,
+          `300枚：${fmtCountRate(data.mb300, mbTotal)}`,
+          '',
+          '〔ST1戦目ベル〕',
+          formatHitTry(data.stBell.hit, data.stBell.try),
+          '',
+          '〔3連上位〕',
+          formatHitTry(data.threeRen.hit, data.threeRen.try),
+          '',
+          '〔ウィスパー〕',
+          `${formatHitTry(data.whisper.hit, data.whisper.try)} ※上位後BONUS分母`,
+          '',
+          '〔ST終了画面〕',
+          `デフォ：${fmtCountRate(data.endDefault, endTotal)}`,
+          `美柑：${fmtCountRate(data.endMikan, endTotal)}`,
+          stampLine,
+          '',
+          '〔隠れ凪〕',
+          nagiLine,
+          '',
+          settingLine
+        ].join('\n');
+      }
+
+      /* ======================================================================
+         Clipboard Copy (iFrame-safe using execCommand with fallback)
+         ====================================================================== */
+      function copyTextToClipboard(text) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.top = '-9999px';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          ta.setSelectionRange(0, text.length);
+          const ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          if (ok) {
+            showToast('まとめテキストをコピーしました！');
+            return;
+          }
+        } catch (e) {
+          // Proceed to clipboard API fallback
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text)
+            .then(() => showToast('まとめテキストをコピーしました！'))
+            .catch(() => showToast('コピーに失敗しました。手動で選択してください', true));
+        } else {
+          showToast('コピーに失敗しました。手動で選択してください', true);
+        }
+      }
+
+      /* ======================================================================
+         Toast & Modal UI
+         ====================================================================== */
+      function showToast(message, isError = false) {
+        const el = document.getElementById('toast');
+        el.textContent = message;
+        el.classList.toggle('error', isError);
+        el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          el.classList.remove('show');
+        }, 2300);
+      }
+
+      function openConfirmModal({ title, message, confirmText = 'OK', isDanger = false, onConfirm }) {
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalMessage').textContent = message;
+        const confirmBtn = document.getElementById('modalConfirm');
+        confirmBtn.textContent = confirmText;
+        confirmBtn.classList.toggle('danger', isDanger);
+        modalCallback = onConfirm;
+        document.getElementById('modalBackdrop').classList.add('open');
+      }
+
+      function closeConfirmModal() {
+        document.getElementById('modalBackdrop').classList.remove('open');
+        modalCallback = null;
+      }
+
+      /* ======================================================================
+         Dynamic DOM Builders
+         ====================================================================== */
+      function buildZoneCards() {
+        const container = document.getElementById('zoneList');
+        container.innerHTML = ZONES.map(z => `
+          <div class="dual-counter-box">
+            <div class="dual-header">
+              <span class="dual-title">${z.label}</span>
+              <span class="dual-stat tabular-nums" id="stat-${z.key}">0/0 (-%)</span>
+            </div>
+            <div class="dual-grid">
+              <div class="sub-counter">
+                <span class="sub-counter-label">当選数</span>
+                <div class="sub-counter-controls">
+                  <button type="button" class="btn-step btn-minus" data-zone="${z.key}" data-part="hit" data-delta="-1">−</button>
+                  <span class="counter-val tabular-nums" id="val-${z.key}-hit">0</span>
+                  <button type="button" class="btn-step btn-plus" data-zone="${z.key}" data-part="hit" data-delta="1">＋</button>
+                </div>
+              </div>
+              <div class="sub-counter">
+                <span class="sub-counter-label">到達数</span>
+                <div class="sub-counter-controls">
+                  <button type="button" class="btn-step btn-minus" data-zone="${z.key}" data-part="try" data-delta="-1">−</button>
+                  <span class="counter-val tabular-nums" id="val-${z.key}-try">0</span>
+                  <button type="button" class="btn-step btn-plus cyan" data-zone="${z.key}" data-part="try" data-delta="1">＋</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function buildStampTags() {
+        const group = document.getElementById('stampTagGroup');
+        group.innerHTML = STAMP_TAGS.map(tag => `
+          <button type="button" class="tag-chip ${tag.cls}" data-stamp-add="${tag.label}">＋${tag.label}</button>
+        `).join('');
+      }
+
+      function buildNagiTags() {
+        const group = document.getElementById('nagiTagGroup');
+        group.innerHTML = NAGI_TAGS.map(tag => `
+          <button type="button" class="tag-chip ${tag.cls}" data-nagi-add="${tag.label}">＋${tag.label}</button>
+        `).join('');
+      }
+
+      function buildSettingChips() {
+        const grid = document.getElementById('settingGrid');
+        grid.innerHTML = SETTING_OPTIONS.map(opt => `
+          <button type="button" class="setting-chip" data-setting="${opt}">${opt}</button>
+        `).join('');
+      }
+
+      /* ======================================================================
+         Render UI from State
+         ====================================================================== */
+      function renderBreakdownPills(containerId, details, orderList, dataAttr, emptyMsg, isCyan = false) {
+        const el = document.getElementById(containerId);
+        const orderedEntries = [];
+
+        orderList.forEach(item => {
+          if (details[item.label] > 0) {
+            orderedEntries.push([item.label, details[item.label]]);
+          }
+        });
+        Object.entries(details).forEach(([k, v]) => {
+          if (v > 0 && !orderList.some(item => item.label === k)) {
+            orderedEntries.push([k, v]);
+          }
+        });
+
+        if (orderedEntries.length === 0) {
+          el.innerHTML = `<span class="recorded-empty">${emptyMsg}</span>`;
+          return;
+        }
+
+        el.innerHTML = orderedEntries.map(([label, count]) => `
+          <button type="button" class="recorded-pill ${isCyan ? 'cyan' : ''}" ${dataAttr}="${escapeHtml(label)}" title="タップで1回減算">
+            <span>${escapeHtml(label)} ×${count}</span>
+            <span class="pill-del">−</span>
+          </button>
+        `).join('');
+      }
+
+      function renderAll() {
+        // 基本情報
+        document.getElementById('inputDate').value = state.date;
+        document.getElementById('inputGames').value = state.games > 0 ? state.games : '';
+
+        // ゾーン当選
+        ZONES.forEach(z => {
+          const item = state.zones[z.key];
+          document.getElementById(`val-${z.key}-hit`).textContent = item.hit;
+          document.getElementById(`val-${z.key}-try`).textContent = item.try;
+          document.getElementById(`stat-${z.key}`).textContent = formatHitTry(item.hit, item.try);
+        });
+
+        // メモリアルボーナス
+        const mbTotal = state.mb100 + state.mb250 + state.mb300;
+        document.getElementById('mbTotalMeta').textContent = `合計 ${mbTotal}回`;
+        ['mb100', 'mb250', 'mb300'].forEach(key => {
+          document.getElementById(`val-${key}`).textContent = state[key];
+          document.getElementById(`rate-${key}`).textContent =
+            mbTotal > 0 ? `${formatPercent(state[key], mbTotal)}%` : '0.0%';
+        });
+
+        // ST1戦目ベル
+        document.getElementById('val-stBell-hit').textContent = state.stBell.hit;
+        document.getElementById('val-stBell-try').textContent = state.stBell.try;
+        document.getElementById('stat-stBell').textContent = formatHitTry(state.stBell.hit, state.stBell.try);
+
+        // 3連上位
+        document.getElementById('val-threeRen-hit').textContent = state.threeRen.hit;
+        document.getElementById('val-threeRen-try').textContent = state.threeRen.try;
+        document.getElementById('stat-threeRen').textContent = formatHitTry(state.threeRen.hit, state.threeRen.try);
+
+        // ウィスパー（上位後BONUS分母）
+        document.getElementById('val-whisper-hit').textContent = state.whisper.hit;
+        document.getElementById('val-whisper-try').textContent = state.whisper.try;
+        document.getElementById('stat-whisper').textContent = formatHitTry(state.whisper.hit, state.whisper.try);
+
+        // ST終了画面
+        const endTotal = state.endDefault + state.endMikan + state.endStamp;
+        document.getElementById('stEndTotalMeta').textContent = `合計 ${endTotal}回`;
+        ['endDefault', 'endMikan', 'endStamp'].forEach(key => {
+          document.getElementById(`val-${key}`).textContent = state[key];
+          document.getElementById(`rate-${key}`).textContent =
+            endTotal > 0 ? `${formatPercent(state[key], endTotal)}%` : '0.0%';
+        });
+        renderBreakdownPills(
+          'stampRecordedList',
+          state.stampDetails,
+          STAMP_TAGS,
+          'data-stamp-dec',
+          '下のタグからスタンプを追加できます',
+          true
+        );
+        document.getElementById('memoStamp').value = state.memoStamp;
+
+        // 隠れ凪
+        document.getElementById('val-kakureNagi').textContent = state.kakureNagi;
+        renderBreakdownPills(
+          'nagiRecordedList',
+          state.nagiDetails,
+          NAGI_TAGS,
+          'data-nagi-dec',
+          '下のタグから出現した隠れ凪を追加できます',
+          false
+        );
+        document.getElementById('memoNagi').value = state.memoNagi;
+
+        // 推定設定
+        document.getElementById('selectedSettingBadge').textContent = state.setting;
+        document.querySelectorAll('.setting-chip').forEach(btn => {
+          btn.classList.toggle('selected', btn.dataset.setting === state.setting);
+        });
+        document.getElementById('memoSetting').value = state.memoSetting;
+
+        // まとめプレビュー
+        document.getElementById('outputPreview').value = generateSummaryText(state);
+
+        // 自動下書き保存
+        saveDraft();
+      }
+
+      /* ======================================================================
+         History Rendering
+         ====================================================================== */
+      function renderHistory() {
+        document.getElementById('historyCountBadge').textContent = historyList.length;
+
+        const container = document.getElementById('historyList');
+        if (historyList.length === 0) {
+          container.innerHTML = `
+            <div class="card history-empty">
+              <div class="history-empty-icon">📂</div>
+              <p style="margin:0; font-weight:700; color:var(--text-secondary);">保存された実戦データはまだありません</p>
+              <p style="margin:6px 0 0; font-size:12.5px;">「実戦を保存」ボタンを押すとここに履歴が追加されます。</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = historyList.map(entry => {
+          const d = deepMergeState(entry.data);
+          const summary = generateSummaryText(d);
+          const zoneHits = d.zones.z150.hit + d.zones.z250.hit + d.zones.z450.hit + d.zones.z650.hit;
+          const zoneTries = d.zones.z150.try + d.zones.z250.try + d.zones.z450.try + d.zones.z650.try;
+
+          return `
+            <article class="history-card" data-id="${entry.id}">
+              <div class="history-top">
+                <div>
+                  <div class="history-date">${escapeHtml(d.date || '日付未設定')}</div>
+                  <div class="history-games tabular-nums">${Number(d.games) || 0} G</div>
+                </div>
+                <span class="history-setting-badge">${escapeHtml(d.setting)}</span>
+              </div>
+              <div class="history-summary-line tabular-nums">
+                <span>ゾーン計: ${zoneHits}/${zoneTries}</span>
+                <span>ウィスパー: ${d.whisper.hit}/${d.whisper.try}</span>
+                <span>スタンプ: ${d.endStamp}</span>
+                <span>隠れ凪: ${d.kakureNagi}</span>
+              </div>
+              <pre class="history-preview-box" id="hist-preview-${entry.id}">${escapeHtml(summary)}</pre>
+              <div class="history-actions">
+                <button type="button" class="btn-sm" data-hist-action="toggle" data-id="${entry.id}">詳細</button>
+                <button type="button" class="btn-sm copy" data-hist-action="copy" data-id="${entry.id}">コピー</button>
+                <button type="button" class="btn-sm load" data-hist-action="load" data-id="${entry.id}">読込</button>
+                <button type="button" class="btn-sm delete" data-hist-action="delete" data-id="${entry.id}">削除</button>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      /* ======================================================================
+         State Mutation Handlers
+         ====================================================================== */
+      function updateDual(obj, part, delta) {
+        if (part === 'hit') {
+          obj.hit = Math.max(0, obj.hit + delta);
+          if (obj.hit > obj.try) {
+            obj.try = obj.hit;
+          }
+        } else {
+          obj.try = Math.max(0, obj.try + delta);
+          if (obj.hit > obj.try) {
+            obj.hit = obj.try;
+          }
+        }
+      }
+
+      function saveCurrentToHistory() {
+        const snapshot = JSON.parse(JSON.stringify(state));
+        const entry = {
+          id: 'rec_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          savedAt: new Date().toISOString(),
+          data: snapshot
+        };
+        historyList.unshift(entry);
+        persistHistory();
+        renderHistory();
+        showToast('実戦データを履歴に保存しました！');
+      }
+
+      function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          const isTarget = btn.dataset.tab === tabName;
+          btn.classList.toggle('active', isTarget);
+          btn.setAttribute('aria-selected', String(isTarget));
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+          panel.classList.toggle('active', panel.id === `panel-${tabName}`);
+        });
+
+        const bottomBar = document.getElementById('bottomBar');
+        bottomBar.style.display = tabName === 'input' ? 'block' : 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      /* ======================================================================
+         Event Listeners
+         ====================================================================== */
+      function bindEvents() {
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
+
+        // Date & Games
+        document.getElementById('inputDate').addEventListener('change', (e) => {
+          state.date = e.target.value;
+          renderAll();
+        });
+
+        document.getElementById('inputGames').addEventListener('input', (e) => {
+          const val = parseInt(e.target.value, 10);
+          state.games = isNaN(val) || val < 0 ? 0 : val;
+          document.getElementById('outputPreview').value = generateSummaryText(state);
+          saveDraft();
+        });
+
+        document.querySelectorAll('[data-add-games]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const delta = parseInt(btn.dataset.addGames, 10);
+            state.games = Math.max(0, (Number(state.games) || 0) + delta);
+            renderAll();
+          });
+        });
+
+        // Delegated clicks inside Input Panel
+        document.getElementById('panel-input').addEventListener('click', (e) => {
+          const target = e.target.closest('button');
+          if (!target) return;
+
+          // Zones
+          if (target.dataset.zone) {
+            updateDual(state.zones[target.dataset.zone], target.dataset.part, parseInt(target.dataset.delta, 10));
+            renderAll();
+            return;
+          }
+
+          // Dual counters (stBell, threeRen, whisper)
+          if (target.dataset.dual) {
+            updateDual(state[target.dataset.dual], target.dataset.part, parseInt(target.dataset.delta, 10));
+            renderAll();
+            return;
+          }
+
+          // Simple counters (MB, ST End, Kakure Nagi)
+          if (target.dataset.counter) {
+            const key = target.dataset.counter;
+            const delta = parseInt(target.dataset.delta, 10);
+            state[key] = Math.max(0, state[key] + delta);
+            renderAll();
+            return;
+          }
+
+          // Stamp tag add (吉・良・優・極)
+          if (target.dataset.stampAdd) {
+            const label = target.dataset.stampAdd;
+            state.stampDetails[label] = (state.stampDetails[label] || 0) + 1;
+            const sum = Object.values(state.stampDetails).reduce((a, b) => a + b, 0);
+            state.endStamp = Math.max(state.endStamp + 1, sum);
+            renderAll();
+            return;
+          }
+
+          // Stamp breakdown decrement
+          if (target.dataset.stampDec) {
+            const label = target.dataset.stampDec;
+            if (state.stampDetails[label] > 0) {
+              state.stampDetails[label] -= 1;
+              if (state.stampDetails[label] <= 0) delete state.stampDetails[label];
+              state.endStamp = Math.max(0, state.endStamp - 1);
+              renderAll();
+            }
+            return;
+          }
+
+          // Kakure Nagi tag add (設定2示唆〜設定6示唆)
+          if (target.dataset.nagiAdd) {
+            const label = target.dataset.nagiAdd;
+            state.nagiDetails[label] = (state.nagiDetails[label] || 0) + 1;
+            const sum = Object.values(state.nagiDetails).reduce((a, b) => a + b, 0);
+            state.kakureNagi = Math.max(state.kakureNagi + 1, sum);
+            renderAll();
+            return;
+          }
+
+          // Kakure Nagi breakdown decrement
+          if (target.dataset.nagiDec) {
+            const label = target.dataset.nagiDec;
+            if (state.nagiDetails[label] > 0) {
+              state.nagiDetails[label] -= 1;
+              if (state.nagiDetails[label] <= 0) delete state.nagiDetails[label];
+              state.kakureNagi = Math.max(0, state.kakureNagi - 1);
+              renderAll();
+            }
+            return;
+          }
+
+          // Estimated setting
+          if (target.dataset.setting) {
+            state.setting = target.dataset.setting;
+            renderAll();
+            return;
+          }
+        });
+
+        // Memo inputs
+        const bindMemo = (id, setter) => {
+          document.getElementById(id).addEventListener('input', (e) => {
+            setter(e.target.value);
+            document.getElementById('outputPreview').value = generateSummaryText(state);
+            saveDraft();
+          });
+        };
+        bindMemo('memoStamp', v => state.memoStamp = v);
+        bindMemo('memoNagi', v => state.memoNagi = v);
+        bindMemo('memoSetting', v => state.memoSetting = v);
+
+        // Copy & Save
+        const handleCopy = () => copyTextToClipboard(generateSummaryText(state));
+        document.getElementById('btnCopyBottom').addEventListener('click', handleCopy);
+        document.getElementById('btnCopyOutput').addEventListener('click', handleCopy);
+        document.getElementById('btnSaveBottom').addEventListener('click', saveCurrentToHistory);
+        document.getElementById('btnSaveOutput').addEventListener('click', saveCurrentToHistory);
+
+        // Reset with custom modal
+        document.getElementById('btnResetTop').addEventListener('click', () => {
+          openConfirmModal({
+            title: '入力データをリセット',
+            message: '現在入力中のカウントとメモをすべて初期状態に戻します。よろしいですか？（保存済みの履歴は消えません）',
+            confirmText: 'リセットする',
+            isDanger: true,
+            onConfirm: () => {
+              state = createDefaultState();
+              renderAll();
+              showToast('入力内容をリセットしました');
+            }
+          });
+        });
+
+        // History list actions
+        document.getElementById('historyList').addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-hist-action]');
+          if (!btn) return;
+
+          const action = btn.dataset.histAction;
+          const id = btn.dataset.id;
+          const entry = historyList.find(item => item.id === id);
+          if (!entry) return;
+
+          if (action === 'toggle') {
+            const box = document.getElementById(`hist-preview-${id}`);
+            if (box) box.classList.toggle('open');
+          } else if (action === 'copy') {
+            copyTextToClipboard(generateSummaryText(deepMergeState(entry.data)));
+          } else if (action === 'load') {
+            openConfirmModal({
+              title: '履歴データを読み込み',
+              message: `${entry.data.date || '選択した履歴'} のデータを入力画面に読み込みます。現在の入力内容は上書きされますがよろしいですか？`,
+              confirmText: '読み込む',
+              isDanger: false,
+              onConfirm: () => {
+                state = deepMergeState(entry.data);
+                renderAll();
+                switchTab('input');
+                showToast('履歴データを入力画面に読み込みました');
+              }
+            });
+          } else if (action === 'delete') {
+            openConfirmModal({
+              title: '履歴を削除',
+              message: 'この実戦履歴を削除します。元に戻すことはできません。',
+              confirmText: '削除する',
+              isDanger: true,
+              onConfirm: () => {
+                historyList = historyList.filter(item => item.id !== id);
+                persistHistory();
+                renderHistory();
+                showToast('履歴を削除しました');
+              }
+            });
+          }
+        });
+
+        // Modal controls
+        document.getElementById('modalCancel').addEventListener('click', closeConfirmModal);
+        document.getElementById('modalBackdrop').addEventListener('click', (e) => {
+          if (e.target.id === 'modalBackdrop') closeConfirmModal();
+        });
+        document.getElementById('modalConfirm').addEventListener('click', () => {
+          const cb = modalCallback;
+          closeConfirmModal();
+          if (typeof cb === 'function') cb();
+        });
+      }
+
+      /* ======================================================================
+         Boot App
+         ====================================================================== */
+      buildZoneCards();
+      buildStampTags();
+      buildNagiTags();
+      buildSettingChips();
+      bindEvents();
+      renderAll();
+      renderHistory();
+    })();
+  </script>
+</body>
+</html>
